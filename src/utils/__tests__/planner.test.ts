@@ -101,4 +101,23 @@ describe('generateMealPlan Portion Scaling and Pantry Deductions', () => {
     expect(mealPlan.lunch.diet).toBe('vegan');
     expect(mealPlan.dinner.diet).toBe('vegan');
   });
+
+  it('should degrade gracefully for highly restrictive cooking times', () => {
+    const preferences: UserPreferences = {
+      budget: 100,
+      people: 2,
+      dietary: 'non-vegetarian',
+      skill: 'beginner',
+      time: 5, // Extremely small time, no recipe exists under 5 mins
+      availableIngredients: [],
+      allergies: [],
+    };
+
+    const mealPlan = generateMealPlan(preferences);
+    
+    // Should still return the shortest recipes rather than crashing
+    expect(mealPlan.breakfast).toBeDefined();
+    expect(mealPlan.lunch).toBeDefined();
+    expect(mealPlan.dinner).toBeDefined();
+  });
 });
