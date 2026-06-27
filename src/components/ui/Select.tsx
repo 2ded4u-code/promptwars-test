@@ -15,6 +15,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, options, error, className = '', id, ...props }, ref) => {
     const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
 
+    const hasError = !!error;
+    const errorId = `${selectId}-error`;
+
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
@@ -32,6 +35,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             className={`w-full px-4 py-2.5 rounded-xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm appearance-none cursor-pointer ${
               error ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20' : ''
             } ${className}`}
+            aria-invalid={hasError}
+            aria-describedby={hasError ? errorId : undefined}
             {...props}
           >
             {options.map((opt) => (
@@ -51,7 +56,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           </div>
         </div>
         {error && (
-          <span className="text-xs text-rose-500 font-medium" role="alert">
+          <span id={errorId} className="text-xs text-rose-500 font-medium" role="alert">
             {error}
           </span>
         )}
